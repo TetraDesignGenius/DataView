@@ -1,0 +1,258 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>HTML5 File Drag &amp; Drop API</title>
+<link rel="stylesheet" type="text/css" media="all" href="styles.css" />
+<!--script src="papaparse.js"></script-->
+<script language="JavaScript" type="text/javascript" src="jquery.js"></script>
+<script language="JavaScript" type="text/javascript" src="mark.js"></script>
+<!--script language="JavaScript" type="text/javascript" src="parse.js"></script-->
+</head>
+<body>
+
+
+<script>
+	var outputF = [];
+	var fileNa = [];
+	var field1 = [];
+    var fileValues=[]; 
+    var files1 = [];
+    //var mainFrameOne = document.getElementById("DataLoader");
+    localStorage.chkDataTS = true;
+	localStorage.chkLineG = true;
+	localStorage.chkBarG = true;
+	localStorage.chkPieG = true; 
+	localStorage.chkMLG = true;
+	localStorage.chkLLG = true; 
+   
+
+   //mainFrameOne.style.display = (
+       //mainFrameOne.style.display == "none" ? "block" : "none"); 
+function myFunction() {
+	window.location.replace("dataVisual.html");
+}</script>
+
+<div id="DataLoader">
+
+
+	
+	 
+    <p>Data Loader: Stellenbosch University Industrial Engineering</p>
+    <head>
+  <meta charset="utf-8">
+  
+  <title>Reading local files: Files are never uploaded to the web, but stays secure in your browser memory!</title>
+  
+<style>
+            table {
+                border-collapse: collapse;
+                border: 2px black solid;
+                font: 12px sans-serif;
+            }
+
+            td {
+                border: 1px black solid;
+                padding: 5px;
+            }
+
+.example {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+#drop_zone {
+  border: 2px dashed #bbb;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  padding: 25px;
+  text-align: center;
+  font: 20pt bold 'Vollkorn';
+  color: #bbb;
+}
+.thumb {
+  height: 75px;
+  border: 1px solid #000;
+  margin: 10px 5px 0 0;
+}
+#progress_bar {
+  margin: 10px 0;
+  padding: 3px;
+  border: 1px solid #000;
+  font-size: 14px;
+  clear: both;
+  opacity: 0;
+  -o-transition: opacity 1s linear;
+  -moz-transition: opacity 1s linear;
+  -webkit-transition: opacity 1s linear;
+  -ms-transition: opacity 1s linear;
+}
+#progress_bar.loading {
+  opacity: 1.0;
+}
+#progress_bar .percent {
+  background-color: #99ccff;
+  height: auto;
+  width: 0;
+}
+#byte_content {
+  margin: 5px 0;
+  max-height: 100px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+#byte_range {
+  margin-top: 5px;
+}
+</style>
+
+</head>
+<script type='text/javascript' > 
+  var files1 = false; 
+</script>
+<body data-href="Data" onload="" class="Dat">
+
+
+
+  <p><strong>L</strong>oad a file to local memory for basic analysis</p>
+  <div class="">
+    <input type="file" id="files1" name="files1[]" multiple title="Files are only loaded locally to your browswer"/>
+    <output id="file_list"  ></output>
+    <p>Files are only loaded locally to your browser</p>
+  </div>
+
+  <p><strong>D</strong>rag and drop a file to local memory for basic analysis</p>
+  <div class="">
+    <div id="drop_zone">Drop file here</div>
+     <!--<input type="file"  /> -->
+    <output id="file_list2"></output>
+  </div>
+
+ 
+  
+ <script type="text/javascript"charset="utf-8"></script>
+
+<script src="d3.min.js"></script>
+<script>
+		
+var get = function(id) { return document.getElementById(id); }
+
+var example1 = example1 || {};
+
+
+  example1.handleFileSelect = function(evt) {
+	//document.title = 'Hello!'; // New title :)
+  var files = evt.target.files;
+  //evt.title = 'New Data';
+  //Window.window.name = "lab_view";
+  document.getElementsByTagName('title')[0].innerHTML = 'Load Data Locally';
+  var xxxyy = evt;
+  var attr = evt.attributes;
+  var children = evt.children;
+
+	f = files[0]; 
+    outputF.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+                f.size, ' bytes, last modified: ',
+                f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
+                '</li>');
+
+	var ccc = 0
+	fileNa.push(escape(f.name));
+	
+	d3.csv(fileNa, function(csv) {
+            csv.forEach(function(row) {
+				ccc = ccc +1;
+				if( ccc == 1){field1.push(Object.keys(row));}
+					
+				
+			
+					fileValues.push(Object.values(row));
+			})
+					
+					
+					var sliceXT = fileValues[2].slice(1,8);
+					var sliceX = parseFloat(sliceXT);
+					
+            var USERdata = [{
+			"headers" : field1[0],
+			"data" : fileValues,
+			"length" :fileValues[0].length,
+			"fileName" : fileNa
+			}];
+		userObject = JSON.stringify(USERdata, null, 100);
+		//console.log(userObject);
+		var fileUser = 'USERS';//userLocalName[numUserL];
+		localStorage.setItem(fileUser, userObject);	
+			               
+			});
+
+  get('file_list').innerHTML = '<ul>' + outputF.join('') + '</ul>';
+  
+
+ setTimeout(myFunction, (500));
+}
+
+
+ 
+
+
+get('files1').addEventListener('change', example1.handleFileSelect, false);
+
+
+
+var example2 = example2 || {};
+example2.onDragOver = function(evt) {
+  evt.stopPropagation();
+  evt.preventDefault();
+  evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+}
+
+example2.onDragFileDrop = function(evt) {
+  evt.stopPropagation();
+  evt.preventDefault();
+
+  var files = evt.dataTransfer.files;
+f = files[0]; 
+
+	var ccc = 0
+	fileNa.push(escape(f.name));
+	d3.csv(fileNa, function(csv) {
+            csv.forEach(function(row) {
+				ccc = ccc +1;
+				if( ccc == 1){field1.push(Object.keys(row));}
+			
+					fileValues.push(Object.values(row));
+			})
+            var USERdata = [{
+			"headers" : field1[0],
+			"data" : fileValues,
+			"length" :fileValues[0].length,
+			"fileName" : fileNa
+			}];
+			
+		userObject = JSON.stringify(USERdata, null, 100);
+		var fileUser = 'USERS';//userLocalName[numUserL];
+		localStorage.setItem(fileUser, userObject);	
+			               
+			});
+  setTimeout(myFunction, (500));
+}
+  get('file_list2').innerHTML = '<ul>' + outputF.join('') + '</ul>';
+
+
+// Setup the dnd listeners.
+get('drop_zone').addEventListener('dragover', example2.onDragOver, false);
+get('drop_zone').addEventListener('drop', example2.onDragFileDrop, false);
+
+
+
+</script>
+
+
+</div>
+
+
+</body>
+</html>
+

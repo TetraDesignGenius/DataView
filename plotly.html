@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>HTML5 File Drag &amp; Drop API</title>
+<link rel="stylesheet" type="text/css" media="all" href="styles.css" />
+</head>
+<body>
+
+<!--<script src="d3.min.js"></script>-->
+<script src="plotly-basic.min.js"></script>
+<script>
+	var outputF = [];
+	var fileNa = [];
+	var field1 = [];
+    var fileValues=[]; 
+    var files1 = [];
+           
+    var mainFrameTwo = document.getElementById("myDiv");
+
+
+   mainFrameTwo.style.display = (
+       mainFrameTwo.style.display == "none" ? "block" : "none"); 
+function myFunction() {
+window.location.replace("dataVisual.html");
+}</script>
+
+<div id="myDiv"></div>
+
+
+	
+	 
+    <p>DataLoader</p>
+    <head>
+  <meta charset="utf-8">
+  
+  <title>Reading local files in JavaScript</title>
+<script>  
+Plotly.d3.csv("data5.csv", function (err, rows) {
+        function unpack(rows, key) {
+            return rows.map(function (row) { return row[key]; });
+        }
+        var data = [{
+        x: ['VALUE 1'], // in reality I have more values...
+        y: [20],
+        type: 'bar'
+    }];
+    Plotly.newPlot('PlotlyTest', data);
+        /*var data = [{
+            type: 'choropleth',
+            locationmode: 'USA-states',
+            locations: unpack(rows, 'code'),
+            z: unpack(rows, 'total exports'),
+            text: unpack(rows, 'state'),
+            zmin: 0,
+            zmax: 17000,
+            colorscale: [
+              [0, 'rgb(242,240,247)'], [0.2, 'rgb(218,218,235)'],
+              [0.4, 'rgb(188,189,220)'], [0.6, 'rgb(158,154,200)'],
+              [0.8, 'rgb(117,107,177)'], [1, 'rgb(84,39,143)']
+            ],
+            colorbar: {
+                title: 'Millions USD',
+                thickness: 0.2
+            },
+            marker: {
+                line: {
+                    color: 'rgb(255,255,255)',
+                    width: 2
+                }
+            }
+        }];
+
+        
+        var layout = {
+            title: '2011 US Agriculture Exports by State',
+            geo: {
+                scope: 'usa',
+                showlakes: true,
+                lakecolor: 'rgb(255,255,255)'
+            }
+        };
+        */
+Plotly.plot(myDiv, data, layout, { showLink: false });
+    });
+</script>
+
+
+</div>
+
+
+</body>
+</html>

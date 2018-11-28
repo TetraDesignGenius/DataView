@@ -1,0 +1,494 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>HTML5 File Drag &amp; Drop API</title>
+<link rel="stylesheet" type="text/css" media="all" href="styles.css" />
+</head>
+<body>
+<button onclick="myFunction()">Click me to Visualise data</button>
+<button onclick="myFunction()">Click me to Load data</button>
+<script>
+	var outputF = [];
+	var flagDiv = 0;
+	var fileNa = [];
+	var field1 = [];
+    var fileValues=[]; 
+    var files1 = [];
+function myFunction() {
+	
+   var mainFrameOne = document.getElementById("DataLoader"); 
+   var mainFrameTwo = document.getElementById("DataVisualiser");
+
+   mainFrameOne.style.display = (
+       mainFrameOne.style.display == "none" ? "block" : "none"); 
+   mainFrameTwo.style.display = (
+       mainFrameTwo.style.display == "none" ? "block" : "none"); 
+}</script>
+
+<div id="DataLoader">
+	
+	 
+    <p>DataLoader</p>
+    <head>
+  <meta charset="utf-8">
+  
+  <title>Reading local files in JavaScript</title>
+  
+<style>
+            table {
+                border-collapse: collapse;
+                border: 2px black solid;
+                font: 12px sans-serif;
+            }
+
+            td {
+                border: 1px black solid;
+                padding: 5px;
+            }
+
+.example {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+#drop_zone {
+  border: 2px dashed #bbb;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  padding: 25px;
+  text-align: center;
+  font: 20pt bold 'Vollkorn';
+  color: #bbb;
+}
+.thumb {
+  height: 75px;
+  border: 1px solid #000;
+  margin: 10px 5px 0 0;
+}
+#progress_bar {
+  margin: 10px 0;
+  padding: 3px;
+  border: 1px solid #000;
+  font-size: 14px;
+  clear: both;
+  opacity: 0;
+  -o-transition: opacity 1s linear;
+  -moz-transition: opacity 1s linear;
+  -webkit-transition: opacity 1s linear;
+  -ms-transition: opacity 1s linear;
+}
+#progress_bar.loading {
+  opacity: 1.0;
+}
+#progress_bar .percent {
+  background-color: #99ccff;
+  height: auto;
+  width: 0;
+}
+#byte_content {
+  margin: 5px 0;
+  max-height: 100px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+#byte_range {
+  margin-top: 5px;
+}
+</style>
+
+</head>
+<script type='text/javascript' > 
+  var files1 = false; 
+</script>
+<body data-href="Data" onload="" class="Dat">
+
+
+
+  <p><strong>S</strong>elect file</p>
+  <div class="">
+    <input type="file" id="files1" name="files1[]" multiple />
+    <output id="file_list"  ></output>
+    
+  </div>
+
+  <p><strong>D</strong>rag and drop file for analysis</p>
+  <div class="">
+    <div id="drop_zone">Drop files here</div>
+     <!--<input type="file"  /> -->
+    <output id="file_list2"></output>
+  </div>
+
+ 
+  
+ <script type="text/javascript"charset="utf-8"></script>
+
+<script src="d3.min.js"></script>
+<script>
+	
+
+       
+            
+ 
+	
+var get = function(id) { return document.getElementById(id); }
+
+var example1 = example1 || {};
+flagDiv = 0;
+example1.handleFileSelect = function(evt) {
+	
+  var files = evt.target.files;
+  //var outputF = [];
+  //for (var i = 0, f; f = files[i]; i++) { //fff for loop
+	f = files[0]; 
+    outputF.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+                f.size, ' bytes, last modified: ',
+                f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
+                '</li>');
+	//data
+    //field1[1] = 0;
+    //var field2=[];
+	//var field3=[];
+	var ccc = 0
+	fileNa.push(escape(f.name));
+	d3.csv(fileNa, function(csv) {
+            csv.forEach(function(row) {
+				ccc = ccc +1;
+				if( ccc == 1){field1.push(Object.keys(row));}
+					//field1[1] = 1;}//
+				
+			
+					fileValues.push(Object.values(row));
+			})
+					
+					
+					var sliceXT = fileValues[2].slice(1,8);
+					var sliceX = parseFloat(sliceXT);
+					console.log("headings",field1);
+			console.log("filevalues",fileValues);
+            console.log("length[0]",fileValues[0].length);
+            console.log("field1[2].[1].1",fileValues[0][0]);
+            console.log("field1[2].[1].1",fileValues[1][0]);
+            console.log("field1[2].[1].1",fileValues[2][0]);
+            console.log("field1[2].[1].1",fileValues[2][3]);
+            console.log("field1[2].[1].1",fileValues[2][1]);
+            console.log("field1[2].[1].1",sliceX);
+            var USERdata = [{
+			"headers" : field1[0],
+			"data" : fileValues,
+			"length" :fileValues[0].length
+			}];
+		userObject = JSON.stringify(USERdata, null, 100);
+		var fileUser = 'USERS';//userLocalName[numUserL];
+		localStorage.setItem(fileUser, userObject);	
+			               
+			});
+
+  
+ // }   //linked to fff for loop
+  get('file_list').innerHTML = '<ul>' + outputF.join('') + '</ul>';
+  
+  
+  console.log(outputF[1]);
+ // window.location.replace("index5.html?file=file1[0]");
+}
+get('files1').addEventListener('change', example1.handleFileSelect, false);
+
+
+
+var example2 = example2 || {};
+example2.onDragOver = function(evt) {
+  evt.stopPropagation();
+  evt.preventDefault();
+  evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+}
+
+example2.onDragFileDrop = function(evt) {
+  evt.stopPropagation();
+  evt.preventDefault();
+
+  var files = evt.dataTransfer.files;
+  //var outputF = [];
+  //for (var i = 0, f; f = files[i]; i++) { //fff2
+f = files[0]; 
+    outputF.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+                f.size, ' bytes, last modified: ',
+                f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
+                '</li>');
+	var fileNa = [];
+	var field1 = [];
+    var fileValues=[]; //data
+    //field1[1] = 0;
+    //var field2=[];
+	//var field3=[];
+	var ccc = 0
+	fileNa.push(escape(f.name));
+	d3.csv(fileNa, function(csv) {
+            csv.forEach(function(row) {
+				ccc = ccc +1;
+				if( ccc == 1){field1.push(Object.keys(row));}
+					//field1[1] = 1;}//
+				
+			
+					fileValues.push(Object.values(row));
+			})
+					
+					
+
+					console.log("headings",field1);
+			console.log("filevalues",fileValues);
+            console.log("length[0]",fileValues[0].length);
+            console.log("field1[2].[1].1",fileValues[0][0]);
+            console.log("field1[2].[1].1",fileValues[1][0]);
+            console.log("field1[2].[1].1",fileValues[2][0]);
+            console.log("field1[2].[1].1",fileValues[2][3]);
+            console.log("field1[2].[1].1",fileValues[2][1]);
+            console.log("field1[2].[1].1",sliceX);
+            var USERdata = [{
+			"headers" : field1[0],
+			"data" : fileValues,
+			"length" :fileValues[0].length
+			}];
+		userObject = JSON.stringify(USERdata, null, 100);
+		var fileUser = 'USERS';//userLocalName[numUserL];
+		localStorage.setItem(fileUser, userObject);	
+			               
+			});
+  //} fff2
+  get('file_list2').innerHTML = '<ul>' + outputF.join('') + '</ul>';
+}
+
+// Setup the dnd listeners.
+get('drop_zone').addEventListener('dragover', example2.onDragOver, false);
+get('drop_zone').addEventListener('drop', example2.onDragFileDrop, false);
+
+
+
+</script>
+
+
+      </div>
+    </section>
+ 
+</body>
+</div>
+<div id="DataVisualiser" style="display:none;">
+    <p>DataVisualiser</p>
+    <head>
+	<meta charset='UTF-8'>
+	
+	<title>Table</title>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<!--[if !IE]><!-->
+	<style>
+		
+	* { 
+	  margin: 0; 
+	  padding: 0; 
+     }
+     body { 
+	   font: 14px/1.4 Georgia, Serif; 
+     }
+    #page-wrap {
+	  margin: 50px;
+    }
+    p {
+	 margin: 20px 0; 
+    }
+
+	/* 
+	Generic Styling, for Desktops/Laptops 
+	*/
+	table { 
+		width: 100%; 
+		border-collapse: collapse; 
+	}
+	/* Zebra striping */
+	tr:nth-of-type(odd) { 
+		background: #eee; 
+	}
+	th { 
+		background: #333; 
+		color: white; 
+		font-weight: bold; 
+		cursor: s-resize;
+		background-repeat: no-repeat;
+        background-position: 3% center;
+	}
+	td, th { 
+		padding: 6px; 
+		border: 1px solid #ccc; 
+		text-align: left; 
+	}
+	
+	th.des:after {
+      content: "\21E9";
+    }
+    
+    th.aes:after {
+      content: "\21E7";
+    }
+	
+	/* 
+	Max width before this PARTICULAR table gets nasty
+	This query will take effect for any screen smaller than 760px
+	and also iPads specifically.
+	*/
+	@media 
+	only screen and (max-width: 760px),
+	(min-device-width: 768px) and (max-device-width: 1024px)  {
+	
+		/* Force table to not be like tables anymore */
+		table, thead, tbody, th, td, tr { 
+			display: block; 
+		}
+		
+		/* Hide table headers (but not display: none;, for accessibility) */
+		thead tr { 
+			position: absolute;
+			top: -9999px;
+			left: -9999px;
+		}
+		
+		tr { border: 1px solid #ccc; }
+		
+		td { 
+			/* Behave  like a "row" */
+			border: none;
+			border-bottom: 1px solid #eee; 
+			position: relative;
+			padding-left: 50%; 
+		}
+		
+		td:before { 
+			/* Now like a table header */
+			position: absolute;
+			/* Top/left values mimic padding */
+			top: 6px;
+			left: 6px;
+			width: 45%; 
+			padding-right: 10px; 
+			white-space: nowrap;
+		}
+		
+		/*
+		Label the data
+		*/
+		td:before {
+		  content: attr(data-th) ": ";
+          font-weight: bold;
+          width: 6.5em;
+          display: inline-block;
+		}
+	}
+	
+	/* Smartphones (portrait and landscape) ----------- */
+	@media only screen
+	and (min-device-width : 320px)
+	and (max-device-width : 480px) {
+		body { 
+			padding: 0; 
+			margin: 0; 
+			width: 320px; }
+		}
+	
+	/* iPads (portrait and landscape) ----------- */
+	@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+		body { 
+			width: 495px; 
+		}
+	}
+	
+	</style>
+	<!--<![endif]-->
+
+</head>
+
+<body>
+
+	<div id="page-wrap">
+
+	<h1>Table</h1>
+    
+
+	</div>
+	<script type="text/javascript" src="d3.min.js"></script>
+	<script type="text/javascript">
+							//var sliceXT = fileValues[2].slice(1,8);
+					//var sliceX = parseFloat(sliceXT);
+		//flagDiv = 1;
+		//if(flagDiv == 1){
+		// d3.csv(fileNa, function(error, data) { // fff5 loop
+		 // if (error) throw error;
+		  var retrievedObjectU = localStorage.getItem("USERS");
+								var USERS = JSON.parse(retrievedObjectU);
+								var headers = USERS[0].headers;
+								var numSaved = USERS[0].length;
+								var data = USERS[0].data;
+								console.log(headers,"  ",numSaved,"   ", data);
+								//localStorage.removeItem("USERS");
+								//window.localStorage.removeItem("USERS");
+								//window.localStorage.removeItem(0);
+		  var sortAscending = true;
+		  var table = d3.select('#page-wrap').append('table');
+		  var titles = headers;
+		  var headers = table.append('thead').append('tr')
+		                   .selectAll('th')
+		                   .data(titles).enter()
+		                   .append('th')
+		                   .text(function (d) {
+			                    return d;
+		                    })
+		                   .on('click', function (d) {
+		                	   headers.attr('class', 'header');
+		                	   
+		                	   if (sortAscending) {
+		                	     rows.sort(function(a, b) { return b[d] < a[d]; });
+		                	     sortAscending = false;
+		                	     this.className = 'aes';
+		                	   } else {
+		                		 rows.sort(function(a, b) { return b[d] > a[d]; });
+		                		 sortAscending = true;
+		                		 this.className = 'des';
+		                	   }
+		                	   
+		                   });
+		  
+		  var rows = data; 
+		  for (r = 0; r<=numSaved;r++){
+		  var tbodyX = table.append('tbody').append('tr')
+		                   .selectAll('td')
+		                   .data(rows[r]).enter()
+		                   .append('td')
+		                   .text(function (d) {
+			                    return d;
+		                    })
+						//}
+		  
+		/* /rows.selectAll('td')
+		    .data(function (d) {
+		    	return titles.map(function (k) {
+		    		return { 'value': d[k], 'name': k};
+		    	});
+		    }).enter()
+		    .append('td')
+		    .attr('data-th', function (d) {
+		    	return d.name;
+		    })
+		    .text(function (d) {
+		    	return d.value;
+		    });
+		    */
+	  //}); fff5 loop
+  }
+	</script>
+</body>
+</div>
+<button onclick="myFunction()">Click me to Visualise data</button>
+<button onclick="myFunction()">Click me to Load data</button>
+</body>
+</html>
+

@@ -1,0 +1,709 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>HTML5 File Drag &amp; Drop API</title>
+<link rel="stylesheet" type="text/css" media="all" href="styles.css" />
+<style>
+		
+	* { 
+	  margin: 0; 
+	  padding: 0; 
+     }
+     body { 
+	   font: 14px/1.4 Georgia, Serif; 
+     }
+    #page-wrap {
+	  margin: 50px;
+    }
+    p {
+	 margin: 20px 0; 
+    }
+
+	/* 
+	Generic Styling, for Desktops/Laptops 
+	*/
+	table { 
+		width: 100%; 
+		border-collapse: collapse; 
+	}
+	/* Zebra striping */
+	tr:nth-of-type(odd) { 
+		background: #eee; 
+	}
+	th { 
+		background: #333; 
+		color: white; 
+		font-weight: bold; 
+		cursor: s-resize;
+		background-repeat: no-repeat;
+        background-position: 3% center;
+	}
+	td, th { 
+		padding: 6px; 
+		border: 1px solid #ccc; 
+		text-align: left; 
+	}
+	
+	th.des:after {
+      content: "\21E9";
+    }
+    
+    th.aes:after {
+      content: "\21E7";
+    }
+	
+	/* 
+	Max width before this PARTICULAR table gets nasty
+	This query will take effect for any screen smaller than 760px
+	and also iPads specifically.
+	*/
+	@media 
+	only screen and (max-width: 760px),
+	(min-device-width: 768px) and (max-device-width: 1024px)  {
+	
+		/* Force table to not be like tables anymore */
+		table, thead, tbody, th, td, tr { 
+			display: block; 
+		}
+		
+		/* Hide table headers (but not display: none;, for accessibility) */
+		thead tr { 
+			position: absolute;
+			top: -9999px;
+			left: -9999px;
+		}
+		
+		tr { border: 1px solid #ccc; }
+		
+		td { 
+			/* Behave  like a "row" */
+			border: none;
+			border-bottom: 1px solid #eee; 
+			position: relative;
+			padding-left: 50%; 
+		}
+		
+		td:before { 
+			/* Now like a table header */
+			position: absolute;
+			/* Top/left values mimic padding */
+			top: 6px;
+			left: 6px;
+			width: 45%; 
+			padding-right: 10px; 
+			white-space: nowrap;
+		}
+		
+		/*
+		Label the data
+		*/
+		td:before {
+		  content: attr(data-th) ": ";
+          font-weight: bold;
+          width: 6.5em;
+          display: inline-block;
+		}
+	}
+	
+	/* Smartphones (portrait and landscape) ----------- */
+	@media only screen
+	and (min-device-width : 320px)
+	and (max-device-width : 480px) {
+		body { 
+			padding: 0; 
+			margin: 0; 
+			width: 320px; }
+		}
+	
+	/* iPads (portrait and landscape) ----------- */
+	@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+		body { 
+			width: 495px; 
+		}
+	}
+	
+	</style>
+	<button onclick="myFunction()">Click to Load data</button>
+
+
+	<script type="text/javascript" src="d3.min.js"></script>
+	<script src="plotly-basic.min.js"></script>
+	<script src="qetuhfs.js"></script>
+	<!--script src="WR.js"></script-->
+	<script type="text/javascript"></script>
+	<script>
+	
+	
+	</script>
+</head>
+
+<script>
+	
+	function lineTitleC() {
+	name1= document.getElementById("lineGT").value;
+	localStorage.name1 = name1;
+	layout.title=localStorage.name1;
+	console.log("lineTitlsC");
+	//lineGT.value=name1;
+	document.getElementById("chart").innerHTML = document.getElementById("chart").innerHTML;
+	lineGT.value=localStorage.name1;
+	layout.title=localStorage.name1;
+	
+}
+function add(a, b) {
+    return a + b;
+}
+function rload(){
+	//window.location.reload(false);
+}
+function updateD() {
+if(document.forms['thisone'].chkMLG.checked!=localStorage.chkMLG){localStorage.chkMLG = !localStorage.chkMLG;}
+if(document.forms['thisone'].chkLLG.checked!=localStorage.chkLLG){localStorage.chkLLG = !localStorage.chkLLG;}
+	setTimeout(rload,500);		
+} 
+function updateT() {
+    //location.reload(true);
+    setTimeout(updateD, 50);
+} 
+
+
+function myFunction() {
+          window.location.replace("dataLoader.html");
+}
+</script>
+<script language="JavaScript" type="text/javascript" src="jquery.js"></script>
+<script language="JavaScript" type="text/javascript" src="mark.js"></script>
+   <script> 
+	   function checkAll(check) {
+		   localStorage.chkDataTS = true;
+		 localStorage.chkLineG = true;
+		 localStorage.chkBarG = true;
+		 localStorage.chkPieG = true;
+		 localStorage.chkLLG = true;
+		 localStorage.chkMLG = true;
+   for (i=0;i<6;i++) {
+     if (check) {
+        document.forms['thisone'].chbx[i].checked=true;
+        if(i==0){$("#tableDiv").show();}
+        if(i==1){$("#chart").show();}
+        if(i==2){$("#Bchart").show();}
+        if(i==3){$("#pie").show();}
+        }
+     else {
+		 localStorage.chkDataTS = false;
+		 localStorage.chkLineG = false;
+		 localStorage.chkBarG = false;
+		 localStorage.chkPieG = false;
+		 localStorage.chkLLG = false;
+		 localStorage.chkMLG = false;
+        document.forms['thisone'].chbx[i].checked=false;
+        if(i==0){$("#tableDiv").hide();}
+        if(i==1){$("#chart").hide();}
+        if(i==2){$("#Bchart").hide();}
+        if(i==3){$("#pie").hide();}
+        }
+     }
+   }
+   
+</script>
+<FORM id="thisone">
+<INPUT TYPE=checkbox NAME="chbx" id="chkDataTS">
+Table
+<INPUT TYPE=checkbox NAME="chbx"  id="chkLineG">
+Line Graph
+<INPUT TYPE=checkbox NAME="chbx" id="chkBarG">
+Bar Graph
+<INPUT TYPE=checkbox NAME="chbx" id="chkPieG">
+Pie Chart
+<INPUT TYPE=checkbox NAME="chbx" id="chkLLG">
+Use lines in scatter plots
+<INPUT TYPE=checkbox NAME="chbx" id="chkMLG">
+Use markers in scatter plots
+<INPUT TYPE=button   NAME="btnCheck" VALUE="check All"
+    onClick="checkAll(true)">
+<INPUT TYPE=button   NAME="btnCheck" VALUE="unCheck All"
+    onClick="checkAll(false)">
+    
+
+</FORM>
+   
+<hr />
+
+
+
+
+<!--div id="DataVisualiser"-->
+
+    <p>Data Visualiser: Stellenbosch University Industrial Engineering</p>
+    
+    <hr />
+   <!-- <form><br>
+Enter an alternative Table Title: <input type="text" id="tableGT"  /><br><br>
+
+</form>
+<hr />-->
+
+ 
+<div id=tableDiv>
+	
+	
+
+	<h2>Table</h2>
+    <script>
+
+		  var retrievedObjectU = localStorage.getItem("USERS");
+								var USERS = JSON.parse(retrievedObjectU);
+								var headers = USERS[0].headers;
+								var numSaved = USERS[0].data.length;
+								var data = USERS[0].data;
+								//console.log(headers,"  ",numSaved,"   ", data);
+								//localStorage.removeItem("USERS");
+								//window.localStorage.removeItem("USERS");
+								//window.localStorage.removeItem(0);
+		  var sortAscending = true;
+		  var table = d3.select('#tableDiv').append('table');
+		  var titles = headers;
+		  var headers = table.append('thead').append('tr')
+		                   .selectAll('th')
+		                   .data(titles).enter()
+		                   .append('th')
+		                   .text(function (d) {
+			                    return d;
+		                    })
+		                   .on('click', function (d) {
+		                	   headers.attr('class', 'header');
+		                	   
+		                	   if (sortAscending) {
+		                	     rows.sort(function(a, b) { return b[d] < a[d]; });
+		                	     sortAscending = false;
+		                	     this.className = 'aes';
+		                	   } else {
+		                		 rows.sort(function(a, b) { return b[d] > a[d]; });
+		                		 sortAscending = true;
+		                		 this.className = 'des';
+		                	   }
+		                	   
+		                   });
+		  
+		  var rows = data; 
+		  for (r = 0; r<= (Math.min(numSaved,10));r++){ // numSaved
+		  var tbodyX = table.append('tbody').append('tr')
+		                   .selectAll('td')
+		                   .data(rows[r]).enter()
+		                   .append('td')
+		                   .text(function (d) {
+			                    return d;
+		                    })
+
+  }
+  </script>
+  <hr />
+  </div>
+  <div id=chart  style="overflow:scroll; height:600px;">
+	 <script>
+		 if(document.forms['thisone'].chkMLG.checked == true){modeLG="markers";}
+			if(document.forms['thisone'].chkLLG.checked == true){modeLG="lines";}
+			if(document.forms['thisone'].chkMLG.checked == true && document.forms['thisone'].chkLLG.checked == true){modeLG="lines+markers";}
+	function updateZ() {
+			//window.location.reload(false);
+		if(document.forms['thisone'].chkMLG.checked == true){modeLG="markers";}
+			if(document.forms['thisone'].chkLLG.checked == true){modeLG="lines";}
+			if(document.forms['thisone'].chkMLG.checked == true && document.forms['thisone'].chkLLG.checked == true){modeLG="lines+markers";}
+	/*var x = document.getElementById('chart').innerHTML;
+       document.getElementById('chart').innerHTML = x;
+       console.log("updateZ"+" "+document.forms['thisone'].chkLLG.checked+" "+document.forms['thisone'].chkMLG.checked);*/
+       //localStorage.chkMLG=document.forms['thisone'].chkMLG.checked;
+			//localStorage.chkMLG=document.forms['thisone'].chkLLG.checked; 
+    }
+   </script>
+    
+<FORM id="cForm">	     
+ <input type="text" id="lineGT" placeholder="Data" onchange="lineTitleC()" /> Line Graph Title<br>
+ <input type="text" id="lineGX"  placeholder="x-axis"/> X-Axis Title<br>
+<input type="text" id="lineGY" placeholder="y-axis" /> Y-Axis Title<br>
+<input type="text" id="lineGC" placeholder="Numbers smaller than 10"  /> Plot only these Column numbers<br>
+<button id="ALGT" onclick="updateZ()">Update Graph</button><br><br> 
+</FORM>
+
+
+
+<script>
+document.getElementById("cForm").addEventListener('submit', function(event){event.preventDefault();});
+lineGT.value=name1;
+var retrievedObjectU = localStorage.getItem("USERS");
+var USERS = JSON.parse(retrievedObjectU);
+var fileName = USERS[0].fileName;
+var headers = USERS[0].headers;
+var numSaved = USERS[0].data.length;
+var numY = headers.length;
+var data = USERS[0].data;
+								//console.log(numY);
+								
+
+//name1= document.getElementById("lineGT").value;
+x1= document.getElementById("lineGX").value;
+y1= document.getElementById("lineGY").value;
+c1= document.getElementById("lineGC").value.trim();
+//console.log(c1=="");
+if(c1=="") {
+	c1="123456789";
+	c1=c1.slice(1,numY);  //all columns to plot
+	//console.log(c1+"C1 valu was empty");
+}
+else {
+c1= document.getElementById("lineGC").value.trim();
+//console.log(c1);
+c1= c1.replace(/\D/g,'');
+//console.log(c1+"C1 uservalue.trim");
+}
+
+//console.log(c1.slice(0,-1));// +"C1 now???");
+	
+//var titleM = fileName.slice(0, -4);
+var titleX = "x-axis";
+var titleY = "y-axis";
+
+	titleM = name1;
+
+	if(x1 != ""){
+	titleX = x1;
+	x1 = "";}
+	if(y1 != ""){
+	titleY = y1;
+	y1 = "";}
+
+	//console.log(c1+"C1 value"+numY +"Length"+c1.length);
+	var c1N=[];
+	
+	if(document.getElementById("chkMLG").value == true){modeLG="markers";}
+	if(document.getElementById("chkLLG").value == true){modeLG="lines";}
+	if(document.getElementById("chkMLG").value == true && document.getElementById("chkLLG").value == true){modeLG="lines+markers";}
+	
+//var lineC= {'#FF8700','#81827F','#04824C'};
+var color = ["Blue ", "Green", "Red", "Orange", "Violet", "Indigo", "Yellow "];
+    Plotly.d3.csv(fileName, function(err, rows){
+      function unpack(rows, key) {
+        return rows.map(function(row) {return row[key]; });
+      }
+   
+	for(i=0;i<c1.length;i++){
+		c1N[i] = {
+        type: "scatter",
+        mode: modeLG,
+        name: headers[Number(c1[i])-1],
+        x: unpack(rows, headers[0]),
+        y: unpack(rows, headers[Number(c1[i])-1]),
+        line: {
+          color: color[i],
+          width: 3,
+          shape: "spline"
+        }
+      }
+    }
+    var data = c1N;  
+    //console.log(c1N);
+
+      
+     /* var trace1 = {
+        type: "scatter",
+        mode: "lines",
+        name: headers[1],
+        x: unpack(rows, headers[0]),
+        y: unpack(rows, headers[1]),
+        line: {
+          color: '#FF8700',
+          width: 3,
+          shape: "spline"
+        }
+      }
+
+      var trace2 = {
+        type: "scatter",
+        mode: "lines",
+        name: headers[2],
+        x: unpack(rows, headers[0]),
+        y: unpack(rows, headers[2]),
+        line: {
+          color: '#81827F',
+          width: 3,
+          shape: "spline"
+        }
+      }
+
+      var trace3 = {
+        type: "scatter",
+        mode: "lines",
+        name: headers[3],
+        x: unpack(rows, headers[0]),
+        y: unpack(rows, headers[3]),
+        line: {
+          color: '#04824C',
+          width: 3,
+          shape: "spline"
+        }
+      }
+
+      var data = [trace1, trace2, trace3];
+      */
+      
+      layout = {
+  title: titleM,
+  xaxis: {
+    title: titleX,
+    titlefont: {
+      family: 'Courier New, monospace',
+      size: 18,
+      color: '#7f7f7f'
+    }
+  },
+  yaxis: {
+    title: titleY,
+    titlefont: {
+      family: 'Courier New, monospace',
+      size: 18,
+      color: '#7f7f7f'
+    }
+  }
+};
+
+
+      Plotly.newPlot('chart', data, layout);
+
+    })
+    /*document.querySelector('#chkDataTS').checked = localStorage.chkDataTS;
+	document.querySelector('#chkLineG').checked = localStorage.chkLineG;
+	document.querySelector('#chkBarG').checked = localStorage.chkBarG;
+	document.querySelector('#chkPieG').checked = localStorage.chkPieG;
+	document.querySelector('#chkMLG').checked = localStorage.chkMLG;
+	document.querySelector('#chkLLG').checked = localStorage.chkLLG;
+	var x = document.getElementById('chart').innerHTML;
+       document.getElementById('chart').innerHTML = x;*/
+
+</script>
+
+  <hr />
+
+  <div id=Bchart style="overflow:scroll; height:600px;">
+
+   
+<input type="text" id="lineBGT" placeholder="Data" /> Bar Graph Title<br>
+ <input type="text" id="lineBGX"  placeholder="x-axis"/> X-Axis Title<br>
+<input type="text" id="lineBGY" placeholder="y-axis" /> Y-Axis Title<br>
+<input type="text" id="lineBGC" placeholder="Numbers smaller than 10"  /> Plot only these Column numbers
+<button onclick="updateT()">Update Titles</button><br><br>
+
+	
+
+
+	 
+  <script>
+	 var retrievedObjectU = localStorage.getItem("USERS");
+								var USERS = JSON.parse(retrievedObjectU);
+								var fileName = USERS[0].fileName;
+								var headers = USERS[0].headers;
+								var numSaved = USERS[0].data.length;
+								var numY = headers.length;
+								var data = USERS[0].data;
+								//console.log(numY);
+								
+
+name2= document.getElementById("lineBGT").value;
+x2= document.getElementById("lineBGX").value;
+y2= document.getElementById("lineBGY").value;
+c2= document.getElementById("lineBGC").value.trim();
+//console.log(c1=="");
+if(c2=="") {
+	c2="123456789";
+	c2=c2.slice(1,numY);  //all columns to plot
+	//console.log(c1+"C1 valu was empty");
+}
+else {
+c2= document.getElementById("lineBGC").value.trim();
+//console.log(c2);
+c2= c2.replace(/\D/g,'');
+//console.log(c1+"C1 uservalue.trim");
+}
+
+//console.log(c1.slice(0,-1));// +"C1 now???");
+	
+var titleM2 = fileName.slice(0, -4);
+var titleX2 = "x-axis";
+var titleY2 = "y-axis";
+if(name2 != ""){
+	titleM2 = name2;
+	name2 = "";}
+	if(x2 != ""){
+	titleX2 = x2;
+	x2 = "";}
+	if(y2 != ""){
+	titleY2 = y2;
+	y2 = "";}
+	if(c2 == ""){
+		
+	}
+	//console.log(c1+"C1 value"+numY +"Length"+c1.length);
+	var c2N=[];
+	
+
+var color = ["Blue ", "Green", "Red", "Orange", "Violet", "Indigo", "Yellow "];
+    Plotly.d3.csv(fileName, function(err, rows){
+      function unpack(rows, key) {
+        return rows.map(function(row) {return row[key]; });
+      }
+   
+	for(i=0;i<c2.length;i++){
+		c2N[i] = {
+        type: "bar",
+        //mode: "lines",
+        name: headers[Number(c2[i])-1],
+        x: unpack(rows, headers[0]),
+        y: unpack(rows, headers[Number(c2[i])-1]),
+        line: {
+          color: color[i],
+          //width: 3,
+          //shape: "spline"
+        }
+      }
+    }
+    var data = c2N;  
+    //console.log(c1N);
+
+      
+      layout = {
+  title: titleM2,
+  xaxis: {
+    title: titleX2,
+    titlefont: {
+      family: 'Courier New, monospace',
+      size: 18,
+      color: '#7f7f7f'
+    }
+  },
+  yaxis: {
+    title: titleY2,
+    titlefont: {
+      family: 'Courier New, monospace',
+      size: 18,
+      color: '#7f7f7f'
+    }
+  }
+};
+
+
+      Plotly.newPlot('Bchart', data, layout);
+
+    })
+
+</script>
+<hr />
+  </div>
+  <div id=pie style="overflow:scroll; height:600px;">
+
+
+<input type="text" id="pieCT" placeholder="Data" /> Pie Chart Title<br>
+
+<input type="text" id="pieCC" placeholder="Numbers smaller than 10"  /> Plot only these Column numbers: (if more than one value per column, the totals per column are plotted)
+<button onclick="updateT()">Update Titles</button><br><br>
+
+
+
+  
+ 
+	    
+  <script>
+	  	  var retrievedObjectU = localStorage.getItem("USERS");
+								var USERS = JSON.parse(retrievedObjectU);
+								var fileName = USERS[0].fileName[0];
+								var headers = USERS[0].headers;
+								var numSaved = USERS[0].data.length;
+								var data = USERS[0].data;
+c3= document.getElementById("pieCC").value.trim();
+//console.log(c3+"PieCC");
+
+if(c3=="") {
+	c3="123456789";
+	c3=c3.slice(1,numY);  //all columns to plot
+	//console.log(c3+"PieCC2");
+}
+else {
+c3= document.getElementById("lineBGC").value.trim();
+c3= c3.replace(/\D/g,'');
+//console.log(c3+"PieCC3");
+}
+	
+	
+
+var color = ["Blue ", "Green", "Red", "Orange", "Violet", "Indigo", "Yellow "];
+name3= document.getElementById("pieCT").value;
+
+var titleM3 = fileName.slice(0, -4);
+if(name3 != ""){
+	titleM3 = name3;
+	name3 = "";}
+		  var sortAscending = true;
+		  var table = d3.select('#tableDiv').append('table');
+		  //var titles = headers;
+		  //console.log(titles);
+	Plotly.d3.csv(fileName, function(err, rows){
+      function unpack(rows, key) {
+        return rows.map(function(row) {return Number(row[key]); });
+      }
+		 var values = [];
+		  for (r = 0; r<c3.length; r++){
+		   values[r] = (unpack(rows, headers[Number(c3[r])-1])).reduce(add, 0);;
+	   }
+	   //console.log(values);
+	
+  var data = [{
+  values: values,
+  //labels: titles,
+  type: 'pie'
+}];
+
+ layout = {
+	title: titleM3,
+  height: 400,
+  width: 500
+};
+
+Plotly.newPlot('pie', data, layout);
+})
+document.forms['thisone'].chkDataTS.checked=localStorage.chkDataTS;
+document.forms['thisone'].chkLineG.checked=localStorage.chkLineG;
+document.forms['thisone'].chkBarG.checked=localStorage.chkBarG;
+document.forms['thisone'].chkPieG.checked=localStorage.chkPieG;
+document.forms['thisone'].chkMLG.checked=localStorage.chkMLG;
+document.forms['thisone'].chkLLG.checked=localStorage.chkLLG;
+ document.querySelector('#chkDataTS').checked = localStorage.chkDataTS;
+	document.querySelector('#chkLineG').checked = localStorage.chkLineG;
+	document.querySelector('#chkBarG').checked = localStorage.chkBarG;
+	document.querySelector('#chkPieG').checked = localStorage.chkPieG;
+	document.querySelector('#chkMLG').checked = localStorage.chkMLG;
+	document.querySelector('#chkLLG').checked = localStorage.chkLLG;
+	
+	   
+        if(localStorage.chkDataTS!=true){$("#tableDiv").hide();
+			document.forms['thisone'].chkDataTS.checked=false;}
+        if(localStorage.chkLineG!=true){$("#chart").hide();
+        document.forms['thisone'].chkLineG.checked=false;}
+        if(localStorage.chkBarG!=true){$("#Bchart").hide();
+        document.forms['thisone'].chkBarG.checked=false;}
+        if(localStorage.chkPie!=true){$("#pie").hide();
+			document.forms['thisone'].chkPieG.checked=false;}
+        
+        
+     
+	
+</script>
+<hr />
+</div>
+<!--/div-->
+</body>
+
+
+<button onclick="myFunction()">Click to Load data</button>
+</body>
+</html>
+
